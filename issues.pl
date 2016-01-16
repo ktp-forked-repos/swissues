@@ -1,3 +1,11 @@
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Fetch issues related to SWI-Prolog and its packages from github.com.
+
+   Written Jan 2016 by Markus Triska (triska@metalevel.at)
+
+   Public domain code.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 :- module(issues,
           [repository/1,
            repository_issue/3]).
