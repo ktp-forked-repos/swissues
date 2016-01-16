@@ -6,7 +6,10 @@ SWI-Prolog&nbsp;(+&nbsp;packages) **issues** that are filed on
 
 [issues.pl](issues.pl) lets you obtain the repositories and issues on
 the toplevel. This is very easy to do, using a combination of
-SWI-Prolog's HTTP, SGML and XPATH&nbsp;libraries.
+SWI-Prolog's
+[HTTP](http://eu.swi-prolog.org/pldoc/man?section=httpopen),
+[HTML](http://eu.swi-prolog.org/pldoc/doc/swi/library/sgml.pl) and
+[XPATH](http://eu.swi-prolog.org/pldoc/doc/swi/library/xpath.pl)&nbsp;libraries.
 
 In principle, the repositories can be easily extracted from a github
 overview page with:
