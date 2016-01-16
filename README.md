@@ -50,4 +50,4 @@ to refresh the HTML file.
 
 Browse the collection of SWI-Prolog issues, updated twice a day:
 
-[**http://www.metalevel.at/swi-issues**](http://www.metalevel.at/swi-issues)
+[**http://www.metalevel.at/swissues**](http://www.metalevel.at/swissues)
