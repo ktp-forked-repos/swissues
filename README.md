@@ -40,9 +40,9 @@ R = 'https://github.com/SWI-Prolog/packages-http',
 Link = 'https://github.com/SWI-Prolog/packages-http/issues/20' .
 </pre>
 
-[html_issues.pl](html_issues) creates the file `swi-issues.html` when
-`make_html/0` is invoked. The HTML&nbsp;file displays the collected
-information about all issues. It is meant to be used like:
+[html_issues.pl](html_issues.pl) creates the file `swi-issues.html`
+when `make_html/0` is invoked. The HTML&nbsp;file displays the
+collected information about all issues. It is meant to be used like:
 
     swipl -g make_html -t halt html_issues.pl
 
