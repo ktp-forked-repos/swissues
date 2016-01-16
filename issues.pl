@@ -15,16 +15,16 @@
 :- use_module(library(sgml)).
 
 
-github_page('https://github.com/SWI-Prolog').
-github_page('https://github.com/SWI-Prolog?page=2').
-github_page('https://github.com/SWI-Prolog?page=3').
-github_page('https://github.com/SWI-Prolog?page=4').
+swi_repositories_page('https://github.com/SWI-Prolog').
+swi_repositories_page('https://github.com/SWI-Prolog?page=2').
+swi_repositories_page('https://github.com/SWI-Prolog?page=3').
+swi_repositories_page('https://github.com/SWI-Prolog?page=4').
 
 % first clauses: testing with sample repositories
 % repository('https://github.com/SWI-Prolog/packages-http').
 % repository('https://github.com/SWI-Prolog/swipl-devel').
 repository(R) :-
-        github_page(Page),
+        swi_repositories_page(Page),
         catch((http_open(Page, Stream, [connection('Keep-alive')]),
               load_html(stream(Stream), DOM, [])),
               _,
