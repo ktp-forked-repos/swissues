@@ -31,6 +31,8 @@ repository(R) :-
 %@ R = 'https://github.com/SWI-Prolog/swipl-devel' .
 
 
+%?- repository(R), portray_clause(R), repository_issue(R, T, L), format("~w ~w\n", [T,L]), false.
+
 repository_issue(R, Text, Link) :-
         atomic_list_concat([R,'/issues'], Issues),
         load_html(Issues, DOM, []),
