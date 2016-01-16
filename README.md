@@ -1,4 +1,4 @@
-## Issues related to SWI-Prolog and its packages
+## Reason about issues related to SWI-Prolog and its packages
 
 The Prolog programs in this repository reason about the
 SWI-Prolog&nbsp;(+&nbsp;packages) **issues** that are filed on
