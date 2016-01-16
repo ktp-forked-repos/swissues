@@ -1,5 +1,9 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   HTTP server displaying github.com issues related to SWI-Prolog.
+   HTTP server displaying issues related to SWI-Prolog from github.com.
+
+   Written Jan 2016 by Markus Triska (triska@metalevel.at)
+
+   Public domain code.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :- use_module(library(http/thread_httpd)).
