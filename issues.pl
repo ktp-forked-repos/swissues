@@ -1,6 +1,11 @@
+:- module(issues,
+          [repository/1,
+           repository_issue/3]).
+
 :- use_module(library(xpath)).
 :- use_module(library(http/http_open)).
 :- use_module(library(sgml)).
+
 
 github_page('https://github.com/SWI-Prolog').
 github_page('https://github.com/SWI-Prolog?page=2').
@@ -13,26 +18,21 @@ repository(R) :-
         xpath(DOM, //a(contains(@itemprop, 'codeRepository'),@href), R0),
         atomic_list_concat(['https://github.com',R0], R).
 
-%?- repository(R), 
+%?- repository(R).
 %@ R = 'https://github.com/SWI-Prolog/packages-http' ;
-%@ R = 'https://github.com/SWI-Prolog/swipl-devel' ;
-%@ R = 'https://github.com/SWI-Prolog/distro-debian' ;
-%@ R = 'https://github.com/SWI-Prolog/packages-sgml' ;
-%@ R = 'https://github.com/SWI-Prolog/packages-zlib' ;
-%@ R = 'https://github.com/SWI-Prolog/packages-xpce' ;
-%@ R = 'https://github.com/SWI-Prolog/packages-windows' .
+%@ R = 'https://github.com/SWI-Prolog/swipl-devel' .
 
 
-repository_issue(R, I) :-
+repository_issue(R, Text, Link) :-
         atomic_list_concat([R,'/issues'], Issues),
         load_html(Issues, DOM, []),
-        xpath(DOM, //a(contains(@class, 'issue-title-link'),text), I).
+        xpath(DOM, //a(contains(@class, 'issue-title-link')), Issue),
+        xpath(Issue, /self(text), Text),
+        xpath(Issue, /self(@href), Link0),
+        atomic_list_concat(['https://github.com',Link0], Link).
 
 
-%?- repository(R), repository_issue(R, I).
-
-%?- repository_issue('https://github.com/SWI-Prolog/packages-http', I).
-%@ R = element(a, [href='/SWI-Prolog/packages-http', itemprop='name codeRepository'], ['        packages-http']) .
-        
-        
+%?- repository_issue('https://github.com/SWI-Prolog/packages-http', Text, Href).
+%@ Text = '      --debug=topic yields error with thread_httpd\n    ',
+%@ Href = 'https://github.com/SWI-Prolog/packages-http/issues/32' .
 
