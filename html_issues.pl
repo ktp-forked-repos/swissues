@@ -25,7 +25,7 @@ make_html :-
                      div([style='padding-left: 5%'],
                          ['Compiled with ',
                           a([href='https://github.com/triska/swi-issues'],
-                            'SWI-Prolog'),
+                            'swi-issues'),
                           \repository_issues(RepIssues)]),
                      hr([]),
                      div([style='text-align: center'],
