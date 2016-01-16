@@ -20,9 +20,12 @@ github_page('https://github.com/SWI-Prolog?page=2').
 github_page('https://github.com/SWI-Prolog?page=3').
 github_page('https://github.com/SWI-Prolog?page=4').
 
+% first clauses: testing with sample repositories
+% repository('https://github.com/SWI-Prolog/packages-http').
+% repository('https://github.com/SWI-Prolog/swipl-devel').
 repository(R) :-
         github_page(Page),
-        catch((http_open(Page, Stream, [connection('Keep-alive'),timeout(2)]),
+        catch((http_open(Page, Stream, [connection('Keep-alive')]),
               load_html(stream(Stream), DOM, [])),
               _,
               false),
@@ -38,20 +41,21 @@ repository(R) :-
 
 repository_issue(R, Text, Link) :-
         atomic_list_concat([R,'/issues'], Issues),
-        catch((http_open(Issues, Stream, [connection('Keep-alive'),timeout(2)]),
+        catch((http_open(Issues, Stream, [connection('Keep-alive')]),
                load_html(stream(Stream), DOM, [])),
               Exception,
               true),
         (   nonvar(Exception) ->
-            format(atom(Text), "<b>~q</b>", [Exception]),
-            Link = ''
+            Text = error(Exception)
         ;   xpath(DOM, //a(contains(@class, 'issue-title-link')), Issue),
-            xpath(Issue, /self(text), Text),
+            xpath(Issue, /self(text), Text0),
+            Text = text(Text0),
             xpath(Issue, /self(@href), Link0),
             atomic_list_concat(['https://github.com',Link0], Link)
         ).
 
 
+%?- repository(R).
 %?- repository_issue('https://github.com/SWI-Prolog/packages-http', Text, Href).
 %@ Text = '      --debug=topic yields error with thread_httpd\n    ',
 %@ Href = 'https://github.com/SWI-Prolog/packages-http/issues/32' .
