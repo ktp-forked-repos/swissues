@@ -25,7 +25,7 @@ swi_repositories_page('https://github.com/SWI-Prolog?page=4').
 % repository('https://github.com/SWI-Prolog/swipl-devel').
 repository(R) :-
         swi_repositories_page(Page),
-        catch((http_open(Page, Stream, [connection('Keep-alive')]),
+        catch((http_open(Page, Stream, [connection('Keep-alive'),timeout(2)]),
               load_html(stream(Stream), DOM, [])),
               _,
               false),
@@ -41,7 +41,7 @@ repository(R) :-
 
 repository_issue(R, Text, Link) :-
         atomic_list_concat([R,'/issues'], Issues),
-        catch((http_open(Issues, Stream, [connection('Keep-alive')]),
+        catch((http_open(Issues, Stream, [connection('Keep-alive'),timeout(2)]),
                load_html(stream(Stream), DOM, [])),
               Exception,
               true),
