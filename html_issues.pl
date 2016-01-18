@@ -20,6 +20,12 @@ make_html :-
                 Pairs0),
         keysort(Pairs0, Pairs),
         group_pairs_by_key(Pairs, RepIssues),
+        issues_html(RepIssues, Hs),
+        setup_call_cleanup(open('swi-issues.html', write, Stream),
+                           print_html(Stream, Hs),
+                           close(Stream)).
+
+issues_html(RepIssues, Hs) :-
         phrase(page([title('SWI-Prolog issues'),
                      style(' a { text-decoration: none; }')],
                     [br([]),h2(center('SWI-Prolog Issues')),br([]),
@@ -28,15 +34,18 @@ make_html :-
                           a([href='https://github.com/triska/swi-issues'],
                             b('swi-issues')),'.',
                           br([]),br([]),
+                          'Date: ', \today,
+                          br([]),br([]),
                           \repository_issues(RepIssues)]),
                      hr([]),
                      div([style='text-align: center'],
                          ['Powered by ',
                           i([a([href='https://github.com/triska/proloxy'],
-                              'Proloxy')])])]), Hs),
-        setup_call_cleanup(open('swi-issues.html', write, Stream),
-                           print_html(Stream, Hs),
-                           close(Stream)).
+                              'Proloxy')])])]), Hs).
+
+today -->
+        { get_time(Now), format_time(atom(A), "%h %d", Now) },
+        html(b(A)).
 
 repository_issues([]) --> [].
 repository_issues([Repository-Issues|RIs]) -->
@@ -56,6 +65,6 @@ link_to(error(Exception), _) --> html(li(b("~q"-[Exception]))).
 link_to(text(Text), Link)    --> html(li(a([href=Link],[Text]))).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-?- reply_html_page([title(test),style('body { padding-left: 5% }')],
-   [\repository_issues(['a/test1'-[issue(text(x),y),issue(error(v),w)]])]).
+?- issues_html(['a/test1'-[issue(text(x),y),issue(error(v),w)]], Hs),
+   print_html(Hs).
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
