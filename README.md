@@ -30,7 +30,7 @@ If the github page structure changes, then such snippets must be adapted.
 
 Example invocation:
 
-    swipl issues.pl
+    $ swipl issues.pl
 
 Sample query and its result:
 
@@ -47,10 +47,12 @@ R = 'https://github.com/SWI-Prolog/packages-http',
 Link = 'https://github.com/SWI-Prolog/packages-http/issues/20' .
 </pre>
 
-[html_issues.pl](html_issues.pl) creates the file `swi-issues.html`
-when `make_html/0` is invoked. The HTML&nbsp;file displays the
-collected information about all issues. It is meant to be used like:
+[**html_issues.pl**](html_issues.pl) uses
+[library(http/html_write)](http://eu.swi-prolog.org/pldoc/man?section=htmlwrite)
+to create the file&nbsp;`swi-issues.html` when `make_html/0` is
+invoked. The HTML&nbsp;file displays the collected information about
+all issues.
 
-    swipl -g make_html -t halt html_issues.pl
+To refresh `swi-issues.html`, use for example:
 
-to refresh the HTML file.
+    $ swipl -g make_html -t halt html_issues.pl
