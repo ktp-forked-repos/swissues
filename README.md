@@ -4,7 +4,11 @@ The Prolog programs in this repository reason about the
 SWI-Prolog&nbsp;(+&nbsp;packages) **issues** that are filed on
 [GitHub](https://github.com/SWI-Prolog).
 
-[issues.pl](issues.pl) lets you obtain the repositories and issues on
+Browse the collection of SWI-Prolog issues, updated twice a day:
+
+[**http://www.metalevel.at/swissues**](http://www.metalevel.at/swissues)
+
+[**issues.pl**](issues.pl) lets you obtain the repositories and issues on
 the toplevel. This is very easy to do, using a combination of
 SWI-Prolog's
 [HTTP](http://eu.swi-prolog.org/pldoc/man?section=httpopen),
@@ -50,7 +54,3 @@ collected information about all issues. It is meant to be used like:
     swipl -g make_html -t halt html_issues.pl
 
 to refresh the HTML file.
-
-Browse the collection of SWI-Prolog issues, updated twice a day:
-
-[**http://www.metalevel.at/swissues**](http://www.metalevel.at/swissues)
