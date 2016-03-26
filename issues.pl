@@ -13,6 +13,7 @@
 :- use_module(library(xpath)).
 :- use_module(library(http/http_open)).
 :- use_module(library(sgml)).
+:- use_module(library(clpfd)).
 
 
 swi_repositories_page('https://github.com/SWI-Prolog').
@@ -40,13 +41,20 @@ repository(R) :-
 %?- repository(R), portray_clause(R), repository_issue(R, T, L), format("~w ~w\n", [T,L]), false.
 
 repository_issue(R, Text, Link) :-
+        repository_issue_(3, R, Text, Link).
+
+repository_issue_(AttemptsLeft0, R, Text, Link) :-
         atomic_list_concat([R,'/issues'], Issues),
         catch((http_open(Issues, Stream, [connection('Keep-alive'),timeout(2)]),
                load_html(stream(Stream), DOM, [])),
               Exception,
               true),
         (   nonvar(Exception) ->
-            Text = error(Exception)
+            (   AttemptsLeft0 #=< 0 ->
+                Text = error(Exception)
+            ;   AttemptsLeft #= AttemptsLeft0 - 1,
+                repository_issue_(AttemptsLeft, R, Text, Link)
+            )
         ;   xpath(DOM, //a(contains(@class, 'issue-title-link')), Issue),
             xpath(Issue, /self(text), Text0),
             Text = text(Text0),
