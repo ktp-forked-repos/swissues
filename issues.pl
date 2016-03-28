@@ -53,6 +53,7 @@ repository_issue_(AttemptsLeft0, R, Text, Link) :-
             (   AttemptsLeft0 #=< 0 ->
                 Text = error(Exception)
             ;   AttemptsLeft #= AttemptsLeft0 - 1,
+                sleep(5), % wait 5 seconds until next attempt
                 repository_issue_(AttemptsLeft, R, Text, Link)
             )
         ;   xpath(DOM, //a(contains(@class, 'issue-title-link')), Issue),
