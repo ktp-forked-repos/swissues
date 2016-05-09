@@ -6,7 +6,7 @@ SWI-Prolog&nbsp;(+&nbsp;packages) **issues** that are filed on
 
 Browse the collection of SWI-Prolog issues, updated twice a day:
 
-[**http://www.metalevel.at/swissues**](http://www.metalevel.at/swissues)
+[**https://www.metalevel.at/swissues**](https://www.metalevel.at/swissues)
 
 [**issues.pl**](issues.pl) lets you obtain the repositories and issues on
 the toplevel. This is very easy to do, using a combination of
