@@ -56,7 +56,7 @@ repository_issue_(AttemptsLeft0, R, Text, Link) :-
                 sleep(5), % wait 5 seconds until next attempt
                 repository_issue_(AttemptsLeft, R, Text, Link)
             )
-        ;   xpath(DOM, //a(contains(@class, 'issue-title-link')), Issue),
+        ;   xpath(DOM, //a(contains(@class, 'Box-row-link')), Issue),
             xpath(Issue, /self(text), Text0),
             Text = text(Text0),
             xpath(Issue, /self(@href), Link0),
