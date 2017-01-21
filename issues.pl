@@ -15,15 +15,41 @@
 :- use_module(library(sgml)).
 :- use_module(library(clpfd)).
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Declarative debugging
+   ---------------------
+
+   This definition allows me to conveniently generalize away goals.
+   When Github changes its layout and an empty list of issues is produced,
+   we can use this to quickly detect the cause of the failure.
+
+   For more information about declarative debugging, please see:
+
+              https://www.metalevel.at/prolog/debugging
+              =========================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+:- op(920,fy, *).
+
+*_.
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Hard-caded list of repository lists for which issues are computed.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 swi_repositories_page('https://github.com/SWI-Prolog').
 swi_repositories_page('https://github.com/SWI-Prolog?page=2').
 swi_repositories_page('https://github.com/SWI-Prolog?page=3').
 swi_repositories_page('https://github.com/SWI-Prolog?page=4').
 
-% first clauses: testing with sample repositories
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Sample repositories for testing.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 % repository('https://github.com/SWI-Prolog/packages-http').
 % repository('https://github.com/SWI-Prolog/swipl-devel').
+
 repository(R) :-
         swi_repositories_page(Page),
         catch((http_open(Page, Stream, [connection('Keep-alive'),timeout(2)]),
@@ -32,13 +58,6 @@ repository(R) :-
               false),
         xpath(DOM, //a(contains(@itemprop, 'codeRepository'),@href), R0),
         atomic_list_concat(['https://github.com',R0], R).
-
-%?- repository(R).
-%@ R = 'https://github.com/SWI-Prolog/packages-http' ;
-%@ R = 'https://github.com/SWI-Prolog/swipl-devel' .
-
-
-%?- repository(R), portray_clause(R), repository_issue(R, T, L), format("~w ~w\n", [T,L]), false.
 
 repository_issue(R, Text, Link) :-
         repository_issue_(3, R, Text, Link).
@@ -56,16 +75,37 @@ repository_issue_(AttemptsLeft0, R, Text, Link) :-
                 sleep(5), % wait 5 seconds until next attempt
                 repository_issue_(AttemptsLeft, R, Text, Link)
             )
-        ;   xpath(DOM, //a(contains(@class, 'Box-row-link')), Issue),
-            xpath(Issue, /self(text), Text0),
-            Text = text(Text0),
-            xpath(Issue, /self(@href), Link0),
-            atomic_list_concat(['https://github.com',Link0], Link)
+        ;   dom_issue_text_link(DOM, Text, Link)
         ).
 
+dom_issue_text_link(DOM, Text, Link) :-
+        xpath(DOM, //a(contains(@class, 'h4')), Issue),
+        xpath(Issue, /self(text), Text0),
+        Text = text(Text0),
+        xpath(Issue, /self(@href), Link0),
+        atomic_list_concat(['https://github.com',Link0], Link).
 
-%?- repository(R).
-%?- repository_issue('https://github.com/SWI-Prolog/packages-http', Text, Href).
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   For testing:
+
+?- load_html(issues, DOM, []),
+   issues:dom_issue_text_link(DOM, Text, Link),
+   portray_clause(Text),
+   false.
+
+?- repository(R).
+%@ R = 'https://github.com/SWI-Prolog/packages-ssl' ;
+%@ R = 'https://github.com/SWI-Prolog/plweb-www' .
+
+?- repository_issue('https://github.com/SWI-Prolog/packages-http', Text, Href).
 %@ Text = '      --debug=topic yields error with thread_httpd\n    ',
 %@ Href = 'https://github.com/SWI-Prolog/packages-http/issues/32' .
 
+
+?- repository(R),
+   portray_clause(R),
+   repository_issue(R, T, L),
+   format("~w ~w\n", [T,L]),
+   false.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
