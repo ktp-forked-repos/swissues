@@ -35,7 +35,9 @@
 *_.
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   Hard-caded list of repository lists for which issues are computed.
+   Hard-coded list of repository overview pages.
+
+   Issues are collected for each repository mentioned on these pages.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 swi_repositories_page('https://github.com/SWI-Prolog').
@@ -50,6 +52,10 @@ swi_repositories_page('https://github.com/SWI-Prolog?page=4').
 % repository('https://github.com/SWI-Prolog/packages-http').
 % repository('https://github.com/SWI-Prolog/swipl-devel').
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   On backtracking, yield each repository that occurs on the pages.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 repository(R) :-
         swi_repositories_page(Page),
         catch((http_open(Page, Stream, [connection('Keep-alive'),timeout(2)]),
@@ -58,6 +64,13 @@ repository(R) :-
               false),
         xpath(DOM, //a(contains(@itemprop, 'codeRepository'),@href), R0),
         atomic_list_concat(['https://github.com',R0], R).
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   For a given repository page, yield the text and link for each issue.
+
+   We perform 3 attempts to fetch the issues. This is necessary because
+   Github sometimes does not respond.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 repository_issue(R, Text, Link) :-
         repository_issue_(3, R, Text, Link).
@@ -77,6 +90,16 @@ repository_issue_(AttemptsLeft0, R, Text, Link) :-
             )
         ;   dom_issue_text_link(DOM, Text, Link)
         ).
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Extract the text and link for each issue from the DOM.
+
+   If the Github layout changes, then this predicate must be adapted.
+   So far, this has occurred once every few months.
+
+   In such cases, declarative debugging (see above) can be used to
+   quickly determine which of the goals fails.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 dom_issue_text_link(DOM, Text, Link) :-
         xpath(DOM, //a(contains(@class, 'h4')), Issue),
